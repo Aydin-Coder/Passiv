@@ -202,6 +202,9 @@
       if (JSON.stringify(numbers) === JSON.stringify(correct)) {
         result.textContent = "✅ Richtig! 🎉";
         result.style.color = "green";
+        setTimeout(() => {
+   			 window.location.reload();
+		    }, 3000);
       } else {
         result.textContent = "❌ Falsch!";
         result.style.color = "red";
