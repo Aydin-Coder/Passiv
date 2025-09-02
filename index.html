@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sentence Sorter</title>
+  <title>Passiv Spiel | Aydin</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -74,20 +74,35 @@
   <h2>Sort the Sentence</h2>
   <div id="container"></div>
 
-  <button onclick="checkOrder()">Check Order</button>
+  <button onclick="checkOrder()">Überprüfen</button>
   <div id="result"></div>
 
   <script>
     const container = document.getElementById("container");
 
-    // Example JSON extracted from Excel (each array is one sentence = 5 parts)
     const sentences = [
-      ["Das Buch", "kann", "man", "nicht", "vergessen"],
-      ["Es", "muss", "vorher fleißig", "geübt", "werden"],
-      ["Heute", "lernen", "wir", "neue", "Wörter"]
+      ["Das Buch", "soll", "sorgfältig", "gelesen", "werden"],
+      ["Der Brief", "kann", "schnell", "geschrieben", "werden"],
+      ["Das Auto", "darf", "regelmäßig", "gewaschen", "werden"],
+      ["Die Aufgabe", "muss", "genau", "gelöst", "werden"],
+      ["Der Kuchen", "soll", "frisch", "gebacken", "werden"],
+      ["Das Zimmer", "kann", "heute", "uafgeräumt", "werden"],
+      ["Der Text", "soll", "klar", "übersetzt", "werden"],
+      ["Die Tür", "muss", "leise", "geschlossen", "werden"],
+      ["Das Geschenk", "darf", "schön", "verpackt", "werden"],
+      ["Der Bericht", "soll", "pünktlich", "eingereicht", "werden"],
+      ["Das Essen", "kann", "warm", "serviert", "werden"],
+      ["Der Plan", "muss", "gründlich", "überprüft", "werden"],
+      ["Die E-Mail", "soll", "sofort", "beantwortet", "werden"],
+      ["Das Fenster", "darf", "vorsichtig", "geöffnet", "werden"],
+      ["Der Vertrag", "muss", "sorgfältig", "geprüft", "werden"],
+      ["Das Kleid", "soll", "ordentlich", "gebügelt", "werden"],
+      ["Die Rechnung", "kann", "schnell", "bezahlt", "werden"],
+      ["Der Briefkasten", "soll", "täglich", "geleert", "werden"],
+      ["Das Bild", "muss", "vorsichtig", "aufgehängt", "werden"],
+      ["Die Frage", "soll", "ehrlich", "beantwortet", "werden"]
     ];
 
-    // --- Shuffle utility ---
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -97,16 +112,13 @@
     }
 
     function createBoxes() {
-      // Pick random sentence
       const sentence = sentences[Math.floor(Math.random() * sentences.length)];
 
-      // Generate boxes with data-value = original order
       const items = sentence.map((word, i) => ({
         value: i + 1,
         text: word
       }));
 
-      // Shuffle them visually
       shuffle(items).forEach(item => {
         const div = document.createElement("div");
         div.className = "box";
@@ -119,12 +131,10 @@
       enableDragAndDrop();
     }
 
-    // --- Drag & Drop for desktop + touch ---
     function enableDragAndDrop() {
       let draggedItem = null;
 
       document.querySelectorAll(".box").forEach(box => {
-        // Desktop
         box.addEventListener("dragstart", e => {
           draggedItem = box;
           setTimeout(() => box.classList.add("dragging"), 0);
@@ -135,7 +145,6 @@
           box.classList.remove("dragging");
         });
 
-        // Touch
         box.addEventListener("touchstart", e => {
           draggedItem = box;
           box.classList.add("dragging");
@@ -185,22 +194,20 @@
       ).element;
     }
 
-    // --- Check order ---
     function checkOrder() {
       const numbers = [...container.querySelectorAll(".box")].map(b => parseInt(b.dataset.value));
       const correct = [1, 2, 3, 4, 5];
       const result = document.getElementById("result");
 
       if (JSON.stringify(numbers) === JSON.stringify(correct)) {
-        result.textContent = "✅ Correct! 🎉";
+        result.textContent = "✅ Richtig! 🎉";
         result.style.color = "green";
       } else {
-        result.textContent = "❌ Wrong! Try again.";
+        result.textContent = "❌ Falsch!";
         result.style.color = "red";
       }
     }
 
-    // Initialize
     createBoxes();
   </script>
 </body>
