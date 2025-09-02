@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentence Sorter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      background: #f4f4f9;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    #container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .box {
+      min-width: 80px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #4CAF50;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      touch-action: none;
+      user-select: none;
+      text-align: center;
+    }
+
+    .dragging {
+      opacity: 0.5;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background: #007BFF;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    #result {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Sort the Sentence</h2>
+  <div id="container"></div>
+
+  <button onclick="checkOrder()">Check Order</button>
+  <div id="result"></div>
+
+  <script>
+    const container = document.getElementById("container");
+
+    // Example JSON extracted from Excel (each array is one sentence = 5 parts)
+    const sentences = [
+      ["Das Buch", "kann", "man", "nicht", "vergessen"],
+      ["Es", "muss", "vorher fleißig", "geübt", "werden"],
+      ["Heute", "lernen", "wir", "neue", "Wörter"]
+    ];
+
+    // --- Shuffle utility ---
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function createBoxes() {
+      // Pick random sentence
+      const sentence = sentences[Math.floor(Math.random() * sentences.length)];
+
+      // Generate boxes with data-value = original order
+      const items = sentence.map((word, i) => ({
+        value: i + 1,
+        text: word
+      }));
+
+      // Shuffle them visually
+      shuffle(items).forEach(item => {
+        const div = document.createElement("div");
+        div.className = "box";
+        div.textContent = item.text;
+        div.dataset.value = item.value; // store original position
+        div.setAttribute("draggable", "true");
+        container.appendChild(div);
+      });
+
+      enableDragAndDrop();
+    }
+
+    // --- Drag & Drop for desktop + touch ---
+    function enableDragAndDrop() {
+      let draggedItem = null;
+
+      document.querySelectorAll(".box").forEach(box => {
+        // Desktop
+        box.addEventListener("dragstart", e => {
+          draggedItem = box;
+          setTimeout(() => box.classList.add("dragging"), 0);
+        });
+
+        box.addEventListener("dragend", e => {
+          draggedItem = null;
+          box.classList.remove("dragging");
+        });
+
+        // Touch
+        box.addEventListener("touchstart", e => {
+          draggedItem = box;
+          box.classList.add("dragging");
+        });
+
+        box.addEventListener("touchend", e => {
+          box.classList.remove("dragging");
+          draggedItem = null;
+        });
+
+        box.addEventListener("touchmove", e => {
+          e.preventDefault();
+          const touch = e.touches[0];
+          const afterElement = getDragAfterElement(container, touch.clientX);
+          if (afterElement == null) {
+            container.appendChild(draggedItem);
+          } else {
+            container.insertBefore(draggedItem, afterElement);
+          }
+        });
+      });
+
+      container.addEventListener("dragover", e => {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(container, e.clientX);
+        if (afterElement == null) {
+          container.appendChild(draggedItem);
+        } else {
+          container.insertBefore(draggedItem, afterElement);
+        }
+      });
+    }
+
+    function getDragAfterElement(container, x) {
+      const draggableElements = [...container.querySelectorAll(".box:not(.dragging)")];
+      return draggableElements.reduce(
+        (closest, child) => {
+          const boxRect = child.getBoundingClientRect();
+          const offset = x - boxRect.left - boxRect.width / 2;
+          if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+          } else {
+            return closest;
+          }
+        },
+        { offset: Number.NEGATIVE_INFINITY }
+      ).element;
+    }
+
+    // --- Check order ---
+    function checkOrder() {
+      const numbers = [...container.querySelectorAll(".box")].map(b => parseInt(b.dataset.value));
+      const correct = [1, 2, 3, 4, 5];
+      const result = document.getElementById("result");
+
+      if (JSON.stringify(numbers) === JSON.stringify(correct)) {
+        result.textContent = "✅ Correct! 🎉";
+        result.style.color = "green";
+      } else {
+        result.textContent = "❌ Wrong! Try again.";
+        result.style.color = "red";
+      }
+    }
+
+    // Initialize
+    createBoxes();
+  </script>
+</body>
+</html>
