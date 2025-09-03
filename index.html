@@ -14,8 +14,7 @@
       justify-content: flex-start;
       min-height: 100vh;
       margin: 0;
-      background: #ffffff;
-      padding: 20px;
+	  background-image: linear-gradient(to bottom, #000000, #331019, #620f24, #920728, #c20023, #d82f1e, #ed4d15, #ff6900, #ff9100, #ffb600, #fbdb00, #ecff00);      padding: 20px;
 	  border-width: 16px;
 	  border-style: solid;
 	  border-color: #000000;
@@ -39,14 +38,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-image: linear-gradient(to bottom, #000000, #331019, #620f24, #920728, #c20023, #d82f1e, #ed4d15, #ff6900, #ff9100, #ffb600, #fbdb00, #ecff00);
-      color: white;
+      background: #FFFFFF;
+      color: black;
       font-size: 18px;
       font-weight: bold;
-      border-radius: 8px;
+      border-radius: 10px;
       touch-action: none;
       user-select: none;
       text-align: center;
+	  border-color: #000000;
     }
 
     .dragging {
@@ -57,9 +57,9 @@
       padding: 10px 20px;
       font-size: 16px;
       border: none;
-      background: #007BFF;
+      background: #1E90FF;
       color: white;
-      border-radius: 5px;
+      border-radius: 10px;
       cursor: pointer;
     }
 
@@ -69,15 +69,16 @@
 
     #result {
       margin-top: 15px;
-      font-size: 18px;
+      font-size: 24px;
       font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h2>Sort the Sentence</h2>
+  <h2>Sortieren Sie</h2>
+	<br><br><br>
   <div id="container"></div>
-
+	<br>
   <button onclick="checkOrder()">Überprüfen</button>
   <div id="result"></div>
 
